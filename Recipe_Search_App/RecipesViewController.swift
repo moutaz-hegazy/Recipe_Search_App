@@ -8,7 +8,7 @@
 import UIKit
 import DropDown
 
-class ViewController: UIViewController, UISearchBarDelegate{
+class RecipesViewController: UIViewController, UISearchBarDelegate{
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var filterCollectionView: UICollectionView!
@@ -18,12 +18,15 @@ class ViewController: UIViewController, UISearchBarDelegate{
     var dropButton = DropDown()
     var dropDown = DropDown()
     var filterData = ["All","vegan","kito"]
+    lazy var networkViewmodel : NetworkViewmodel = {
+        NetworkViewmodel()
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         dataFiltered = data
-
+        networkViewmodel.fetchRecipes(for: "chicken", with: "keto-friendly")
         dropButton.anchorView = searchBar
         dropButton.bottomOffset = CGPoint(x: 0, y:(searchBar.bounds.minY + 90))
         dropButton.backgroundColor = .white
@@ -79,7 +82,7 @@ class ViewController: UIViewController, UISearchBarDelegate{
 
 
 //MARK: - collectionview delegate & datasource methods
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource{
+extension RecipesViewController: UICollectionViewDelegate, UICollectionViewDataSource{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
