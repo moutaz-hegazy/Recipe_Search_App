@@ -9,6 +9,17 @@ import Foundation
 
 struct NetworkViewmodel {
     
+    private let path = UserDefaults.standard
+    
+    var searchHistory : [String]{
+        get{
+             return path.array(forKey: "searchHistory") as? [String] ?? []
+        }
+        set(newValue){
+            path.setValue(newValue, forKey: "searchHistory")
+        }
+    }
+    
     func fetchRecipes(for ingredient : String,with filter : String? = nil,
                       from beginIndex : Int = 0, to endIndex : Int = 10,
                       onSuccessBinding : @escaping([Recipe])->(),

@@ -15,14 +15,15 @@ class RecipesViewController: UIViewController{
     @IBOutlet weak var recipesTableView: UITableView!
     @IBOutlet weak var zeroResultsLbl: UILabel!
     
-    private var data: [String] = ["apple","appear","Azhar","code","BCom"]
-    private var dataFiltered: [String] = []
+    private var searchData = [String]()
+    private var searchDataFiltered: [String] = []
     private var dropButton = DropDown()
     private var searchFilter = ""{
         didSet{
             networkViewmodel.fetchRecipes(for: searchText, with: searchFilter, onSuccessBinding: {
                     [weak self] recipes in
                 self?.displayData(from: recipes)
+                self?.searchBar.resignFirstResponder()
             }, onFailBinding: {})
         }
     }
@@ -53,7 +54,9 @@ class RecipesViewController: UIViewController{
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        dataFiltered = data
+        searchData = networkViewmodel.searchHistory
+        
+        searchDataFiltered = searchData
         dropButton.anchorView = searchBar
         dropButton.bottomOffset = CGPoint(x: 0, y:(searchBar.bounds.minY + 90))
         dropButton.backgroundColor = .white
@@ -77,6 +80,32 @@ class RecipesViewController: UIViewController{
             recipesTableView.reloadData()
         }
     }
+    
+    private func arrangeSearchHistory(for searchTxt : String){
+        if let index = searchData.firstIndex(of:searchTxt){
+            searchData.swapAt(0, index)
+        }else{
+            searchData.insert(searchTxt, at: 0)
+        }
+        
+        if(searchData.count <= 10){
+            networkViewmodel.searchHistory = searchData
+        }else{
+            let tenSearchHistory = Array(searchData[0..<10])
+            networkViewmodel.searchHistory = tenSearchHistory
+            searchData = tenSearchHistory
+        }
+    }
+    
+    private func fetchSearchResults(for searchTxt : String){
+        arrangeSearchHistory(for: searchTxt)
+        searchText = searchTxt.lowercased()
+        filterCollectionView.isHidden = false
+        networkViewmodel.fetchRecipes(for: searchTxt.lowercased(), with: searchFilter,onSuccessBinding: {
+            [weak self](recipes) in
+            self?.displayData(from: recipes)
+        },onFailBinding: {})
+    }
 }
 
 
@@ -89,17 +118,16 @@ extension RecipesViewController: UISearchBarDelegate{
         }else if let lastChar = searchText.last, String(lastChar).containsSpecialCharacter{
             searchBar.text = String(searchText[..<searchText.index(before: searchText.endIndex)])
         }else{
-            print("none")
+            searchDataFiltered = searchText.isEmpty ? searchData : searchData.filter({ (dat) -> Bool in
+                dat.range(of: searchText, options: .caseInsensitive) != nil
+            })
+            dropButton.dataSource = searchDataFiltered
+            dropButton.show()
         }
-        dataFiltered = searchText.isEmpty ? data : data.filter({ (dat) -> Bool in
-            dat.range(of: searchText, options: .caseInsensitive) != nil
-        })
-        dropButton.dataSource = dataFiltered
-        dropButton.show()
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        dropButton.dataSource = dataFiltered
+        dropButton.dataSource = searchDataFiltered
         dropButton.show()
         return true
     }
@@ -115,7 +143,7 @@ extension RecipesViewController: UISearchBarDelegate{
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchBar.resignFirstResponder()
         searchBar.text = ""
-        dataFiltered = data
+        searchDataFiltered = searchData
         dropButton.hide()
         filterCollectionView.isHidden = true
     }
@@ -125,12 +153,7 @@ extension RecipesViewController: UISearchBarDelegate{
         guard let searchTxt = searchBar.text else{
             return
         }
-        searchText = searchTxt.lowercased()
-        filterCollectionView.isHidden = false
-        networkViewmodel.fetchRecipes(for: searchTxt.lowercased(), with: "",onSuccessBinding: {
-            [weak self](recipes) in
-            self?.displayData(from: recipes)
-        },onFailBinding: {})
+        fetchSearchResults(for: searchTxt)
     }
 }
 

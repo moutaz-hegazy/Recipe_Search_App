@@ -19,6 +19,7 @@
 		A90CEC732677CE9C005FEEBF /* Recipe_Search_AppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A90CEC722677CE9C005FEEBF /* Recipe_Search_AppUITests.swift */; };
 		A9658809267ACAFC000E0F69 /* NetworkViewmodel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9658808267ACAFC000E0F69 /* NetworkViewmodel.swift */; };
 		A9A03262267CAC4D00A33004 /* RecipeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9A03261267CAC4D00A33004 /* RecipeTableViewCell.swift */; };
+		A9C51788267E52860076184B /* SearchHistory.plist in Resources */ = {isa = PBXBuildFile; fileRef = A9C51787267E52860076184B /* SearchHistory.plist */; };
 		A9DC5DFD267AAEA50084948C /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC5DFC267AAEA50084948C /* Constants.swift */; };
 		A9DC5E0A267AB2E30084948C /* Recipe.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC5E09267AB2E30084948C /* Recipe.swift */; };
 		A9DC5E17267AB6D50084948C /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DC5E16267AB6D50084948C /* Response.swift */; };
@@ -67,6 +68,7 @@
 		A90CEC742677CE9C005FEEBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A9658808267ACAFC000E0F69 /* NetworkViewmodel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkViewmodel.swift; sourceTree = "<group>"; };
 		A9A03261267CAC4D00A33004 /* RecipeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecipeTableViewCell.swift; sourceTree = "<group>"; };
+		A9C51787267E52860076184B /* SearchHistory.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = SearchHistory.plist; sourceTree = "<group>"; };
 		A9DC5DFC267AAEA50084948C /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		A9DC5E09267AB2E30084948C /* Recipe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Recipe.swift; sourceTree = "<group>"; };
 		A9DC5E16267AB6D50084948C /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -166,6 +168,7 @@
 				A90CEC5E2677CE9C005FEEBF /* Info.plist */,
 				A9E43D89267913ED008B5A45 /* FilterCollectionViewCell.swift */,
 				A9A03261267CAC4D00A33004 /* RecipeTableViewCell.swift */,
+				A9C51787267E52860076184B /* SearchHistory.plist */,
 			);
 			path = Recipe_Search_App;
 			sourceTree = "<group>";
@@ -330,6 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A90CEC5D2677CE9C005FEEBF /* LaunchScreen.storyboard in Resources */,
+				A9C51788267E52860076184B /* SearchHistory.plist in Resources */,
 				A90CEC5A2677CE9C005FEEBF /* Assets.xcassets in Resources */,
 				A90CEC582677CE99005FEEBF /* Main.storyboard in Resources */,
 			);
