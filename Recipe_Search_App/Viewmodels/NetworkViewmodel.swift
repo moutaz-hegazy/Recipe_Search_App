@@ -9,12 +9,16 @@ import Foundation
 
 struct NetworkViewmodel {
     
-    func fetchRecipes(for ingredient : String,with filter : String? = nil, onSuccessBinding : @escaping([Recipe])->(), onFailBinding: @escaping()->()){
+    func fetchRecipes(for ingredient : String,with filter : String? = nil,
+                      from beginIndex : Int = 0, to endIndex : Int = 10,
+                      onSuccessBinding : @escaping([Recipe])->(),
+                      onFailBinding: @escaping()->()){
         var requestFilter = ""
         if(filter != nil && !filter!.isEmpty){
             requestFilter = "&health=\(filter!)"
         }
-        NetworkLayer.fetchData(from:"https://api.edamam.com/search?q=\(ingredient.replacingOccurrences(of: " ", with: "-"))&app_id=\(Constants.AppID)&app_key=\(Constants.AppKey)&from=0&to=10\(requestFilter)"){
+        print("https://api.edamam.com/search?q=\(ingredient.replacingOccurrences(of: " ", with: "-"))&app_id=\(Constants.AppID)&app_key=\(Constants.AppKey)&from=\(beginIndex)&to=\(endIndex)\(requestFilter)")
+        NetworkLayer.fetchData(from:"https://api.edamam.com/search?q=\(ingredient.replacingOccurrences(of: " ", with: "-"))&app_id=\(Constants.AppID)&app_key=\(Constants.AppKey)&from=\(beginIndex)&to=\(endIndex)\(requestFilter)"){
             data,error in
             if(error != nil){
                 onFailBinding()

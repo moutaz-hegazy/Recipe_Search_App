@@ -13,10 +13,20 @@ class RecipesViewController: UIViewController{
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var filterCollectionView: UICollectionView!
     @IBOutlet weak var recipesTableView: UITableView!
+    @IBOutlet weak var zeroResultsLbl: UILabel!
     
     private var data: [String] = ["apple","appear","Azhar","code","BCom"]
     private var dataFiltered: [String] = []
     private var dropButton = DropDown()
+    private var searchFilter = ""{
+        didSet{
+            networkViewmodel.fetchRecipes(for: searchText, with: searchFilter, onSuccessBinding: {
+                    [weak self] recipes in
+                self?.displayData(from: recipes)
+            }, onFailBinding: {})
+        }
+    }
+    private var searchText = ""
     private var dropDown = DropDown()
     private lazy var filterData : [String] = {
         var array = ["All"]
@@ -53,6 +63,18 @@ class RecipesViewController: UIViewController{
             print("Selected item: \(item) at index: \(index)")
             self?.searchBar.text = item
             self?.filterCollectionView.isHidden = false
+        }
+    }
+    
+    private func displayData(from recipes : [Recipe]){
+        if(recipes.isEmpty){
+            recipesTableView.isHidden = true
+            zeroResultsLbl.isHidden = false
+        }else{
+            zeroResultsLbl.isHidden = true
+            recipesTableView.isHidden = false
+            fetchedRecipes = recipes
+            recipesTableView.reloadData()
         }
     }
 }
@@ -99,11 +121,15 @@ extension RecipesViewController: UISearchBarDelegate{
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        guard let searchTxt = searchBar.text else{
+            return
+        }
+        searchText = searchTxt.lowercased()
         filterCollectionView.isHidden = false
-        networkViewmodel.fetchRecipes(for: "chicken", with: "keto-friendly",onSuccessBinding: {
+        networkViewmodel.fetchRecipes(for: searchTxt.lowercased(), with: "",onSuccessBinding: {
             [weak self](recipes) in
-            self?.fetchedRecipes.append(contentsOf: recipes)
-            self?.recipesTableView.reloadData()
+            self?.displayData(from: recipes)
         },onFailBinding: {})
     }
 }
@@ -136,9 +162,20 @@ extension RecipesViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         selectedCell = indexPath
+        if(indexPath.item == 0){
+            searchFilter = ""
+        }else{
+            let cell = collectionView.cellForItem(at: indexPath) as! FilterCollectionViewCell
+            let filterKey = cell.cellLbl.text
+            if(filterKey == nil || filterKey!.isEmpty){
+                searchFilter = ""
+            }else{
+                searchFilter = Constants.filterOptions[filterKey!] ?? ""
+            }
+        }
     }
-
 }
+
 
 //MARK: -tableview delegate & datasource methods
 extension RecipesViewController: UITableViewDelegate, UITableViewDataSource{
@@ -159,7 +196,19 @@ extension RecipesViewController: UITableViewDelegate, UITableViewDataSource{
         }
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if(indexPath.row == fetchedRecipes.count-1){
+            networkViewmodel
+                .fetchRecipes(for: searchText, with: searchFilter, from: fetchedRecipes.count-1, to: fetchedRecipes.count+9)
+                { [weak self](recipes) in
+                    self?.fetchedRecipes.append(contentsOf: recipes)
+                    self?.recipesTableView.reloadData()
+                } onFailBinding: {}
+        }
+    }
 }
+
 
 
 extension String {
