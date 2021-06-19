@@ -8,25 +8,42 @@
 import UIKit
 import DropDown
 
-class RecipesViewController: UIViewController, UISearchBarDelegate{
+class RecipesViewController: UIViewController{
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var filterCollectionView: UICollectionView!
+    @IBOutlet weak var recipesTableView: UITableView!
     
-    var data: [String] = ["apple","appear","Azhar","code","BCom"]
-    var dataFiltered: [String] = []
-    var dropButton = DropDown()
-    var dropDown = DropDown()
-    var filterData = ["All","vegan","kito"]
-    lazy var networkViewmodel : NetworkViewmodel = {
+    private var data: [String] = ["apple","appear","Azhar","code","BCom"]
+    private var dataFiltered: [String] = []
+    private var dropButton = DropDown()
+    private var dropDown = DropDown()
+    private lazy var filterData : [String] = {
+        var array = ["All"]
+        array.append(contentsOf: Constants.filterOptions.keys.map{$0}.sorted())
+        return array
+    }()
+    private lazy var networkViewmodel : NetworkViewmodel = {
         NetworkViewmodel()
     }()
+    private var selectedCell : IndexPath = [0,0]{
+        willSet{
+            if let cell = filterCollectionView.cellForItem(at: selectedCell) as? FilterCollectionViewCell{
+                cell.cellLbl.backgroundColor = .white
+                cell.cellLbl.textColor = .black
+            }
+            if let nextCell = filterCollectionView.cellForItem(at: newValue) as? FilterCollectionViewCell{
+                nextCell.cellLbl.backgroundColor = .blue
+                nextCell.cellLbl.textColor = .white
+            }
+        }
+    }
+    private var fetchedRecipes = [Recipe]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         dataFiltered = data
-        networkViewmodel.fetchRecipes(for: "chicken", with: "keto-friendly")
         dropButton.anchorView = searchBar
         dropButton.bottomOffset = CGPoint(x: 0, y:(searchBar.bounds.minY + 90))
         dropButton.backgroundColor = .white
@@ -35,10 +52,23 @@ class RecipesViewController: UIViewController, UISearchBarDelegate{
         dropButton.selectionAction = { [weak self](index: Int, item: String) in
             print("Selected item: \(item) at index: \(index)")
             self?.searchBar.text = item
+            self?.filterCollectionView.isHidden = false
         }
     }
+}
+
+
+//MARK: -searchBar delegate methods.
+extension RecipesViewController: UISearchBarDelegate{
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if(searchText == " "){
+            searchBar.text = ""
+        }else if let lastChar = searchText.last, String(lastChar).containsSpecialCharacter{
+            searchBar.text = String(searchText[..<searchText.index(before: searchText.endIndex)])
+        }else{
+            print("none")
+        }
         dataFiltered = searchText.isEmpty ? data : data.filter({ (dat) -> Bool in
             dat.range(of: searchText, options: .caseInsensitive) != nil
         })
@@ -54,12 +84,6 @@ class RecipesViewController: UIViewController, UISearchBarDelegate{
 
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
-        for ob: UIView in ((searchBar.subviews[0] )).subviews {
-            if let z = ob as? UIButton {
-                let btn: UIButton = z
-                btn.setTitleColor(UIColor.white, for: .normal)
-            }
-        }
     }
 
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
@@ -76,8 +100,12 @@ class RecipesViewController: UIViewController, UISearchBarDelegate{
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         filterCollectionView.isHidden = false
+        networkViewmodel.fetchRecipes(for: "chicken", with: "keto-friendly",onSuccessBinding: {
+            [weak self](recipes) in
+            self?.fetchedRecipes.append(contentsOf: recipes)
+            self?.recipesTableView.reloadData()
+        },onFailBinding: {})
     }
-
 }
 
 
@@ -98,8 +126,46 @@ extension RecipesViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         if let filterCell = cell as? FilterCollectionViewCell{
             filterCell.cellLbl.text = filterData[indexPath.item]
+            if(indexPath == selectedCell){
+                filterCell.cellLbl.backgroundColor = .blue
+                filterCell.cellLbl.textColor = .white
+            }
+        }
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        selectedCell = indexPath
+    }
+
+}
+
+//MARK: -tableview delegate & datasource methods
+extension RecipesViewController: UITableViewDelegate, UITableViewDataSource{
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return fetchedRecipes.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "recipeCell", for: indexPath)
+        
+        if let recipeCell = cell as? RecipeTableViewCell{
+            recipeCell.displayRecipeData(for: fetchedRecipes[indexPath.row])
         }
         return cell
     }
 }
 
+
+extension String {
+   var containsSpecialCharacter: Bool {
+      let regex = "[^A-Za-z ]"
+      let testString = NSPredicate(format:"SELF MATCHES %@", regex)
+      return testString.evaluate(with: self)
+   }
+}

@@ -26,27 +26,27 @@
                                 </connections>
                             </searchBar>
                             <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gEH-Mg-yMH">
-                                <rect key="frame" x="25" y="159" width="364" height="50"/>
+                                <rect key="frame" x="25" y="159" width="364" height="70"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="2RV-h2-DyJ"/>
+                                    <constraint firstAttribute="height" constant="70" id="2RV-h2-DyJ"/>
                                 </constraints>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="fkg-03-U5r">
-                                    <size key="itemSize" width="135" height="45"/>
+                                    <size key="itemSize" width="150" height="45"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="filterCell" id="8aw-q8-zFe" customClass="FilterCollectionViewCell" customModule="Recipe_Search_App" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="2.5" width="135" height="45"/>
+                                        <rect key="frame" x="0.0" y="12.5" width="150" height="45"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="Kji-HA-pE1">
-                                            <rect key="frame" x="0.0" y="0.0" width="135" height="45"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="45"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUU-7a-RQ1">
-                                                    <rect key="frame" x="0.0" y="0.0" width="135" height="45"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="150" height="45"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -69,19 +69,67 @@
                                     <outlet property="delegate" destination="BYZ-38-t0r" id="uSG-9e-s7f"/>
                                 </connections>
                             </collectionView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cpH-x7-4rR">
-                                <rect key="frame" x="0.0" y="214" width="414" height="648"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="225" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cpH-x7-4rR">
+                                <rect key="frame" x="0.0" y="234" width="414" height="628"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="153" id="1oX-vI-Z4T">
-                                        <rect key="frame" x="0.0" y="28" width="414" height="153"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="recipeCell" rowHeight="225" id="1oX-vI-Z4T" customClass="RecipeTableViewCell" customModule="Recipe_Search_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="225"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="1oX-vI-Z4T" id="a78-0I-KDx">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="153"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="225"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="NE3-r1-g0h">
+                                                    <rect key="frame" x="30" y="26" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="NE3-r1-g0h" secondAttribute="height" multiplier="1:1" id="5ns-6U-bPD"/>
+                                                        <constraint firstAttribute="width" constant="100" id="hMq-BA-Fxo"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NDO-bm-1c1">
+                                                    <rect key="frame" x="140" y="26" width="38" height="24"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Source" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YdA-WZ-7H2">
+                                                    <rect key="frame" x="140" y="60" width="54" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mP5-uF-tr3">
+                                                    <rect key="frame" x="140" y="91" width="244" height="14.5"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NE3-r1-g0h" firstAttribute="leading" secondItem="a78-0I-KDx" secondAttribute="leadingMargin" constant="10" id="2Eb-u8-faZ"/>
+                                                <constraint firstItem="mP5-uF-tr3" firstAttribute="leading" secondItem="NE3-r1-g0h" secondAttribute="trailing" constant="10" id="A0n-K2-IVH"/>
+                                                <constraint firstItem="NDO-bm-1c1" firstAttribute="top" secondItem="NE3-r1-g0h" secondAttribute="top" id="EX1-B4-zs5"/>
+                                                <constraint firstItem="NDO-bm-1c1" firstAttribute="leading" secondItem="NE3-r1-g0h" secondAttribute="trailing" constant="10" id="H6R-23-WhH"/>
+                                                <constraint firstItem="mP5-uF-tr3" firstAttribute="top" secondItem="YdA-WZ-7H2" secondAttribute="bottom" constant="10" id="WAL-i8-8Cj"/>
+                                                <constraint firstItem="YdA-WZ-7H2" firstAttribute="top" secondItem="NDO-bm-1c1" secondAttribute="bottom" constant="10" id="YJg-a2-XRc"/>
+                                                <constraint firstItem="YdA-WZ-7H2" firstAttribute="leading" secondItem="NE3-r1-g0h" secondAttribute="trailing" constant="10" id="iM8-6n-N49"/>
+                                                <constraint firstItem="NE3-r1-g0h" firstAttribute="top" secondItem="a78-0I-KDx" secondAttribute="topMargin" constant="15" id="pgY-fc-jW0"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="mP5-uF-tr3" secondAttribute="trailing" constant="10" id="wDs-mg-w3c"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="healthLbl" destination="mP5-uF-tr3" id="sPh-UN-qR1"/>
+                                            <outlet property="recipeImageView" destination="NE3-r1-g0h" id="czF-is-1kN"/>
+                                            <outlet property="sourceLbl" destination="YdA-WZ-7H2" id="pzy-iM-VIA"/>
+                                            <outlet property="titleLbl" destination="NDO-bm-1c1" id="bHc-gc-7bW"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="b8L-9Q-ZUD"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="V8D-Aq-NNj"/>
+                                </connections>
                             </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
@@ -101,6 +149,7 @@
                     </view>
                     <connections>
                         <outlet property="filterCollectionView" destination="gEH-Mg-yMH" id="xDH-7L-eD4"/>
+                        <outlet property="recipesTableView" destination="cpH-x7-4rR" id="lNt-B9-uTZ"/>
                         <outlet property="searchBar" destination="2Yl-Qm-lyG" id="7sV-L9-Y9b"/>
                     </connections>
                 </viewController>
