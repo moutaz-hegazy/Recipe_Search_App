@@ -13,17 +13,21 @@ class RecipesViewController: UIViewController{
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var filterCollectionView: UICollectionView!
     @IBOutlet weak var recipesTableView: UITableView!
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var zeroResultsLbl: UILabel!
     
     private var searchData = [String]()
     private var searchDataFiltered: [String] = []
-    private var dropButton = DropDown()
+    private var dropDownMenu = DropDown()
     private var searchFilter = ""{
         didSet{
+            spinner.startAnimating()
+            spinner.isHidden = false
+            searchBar.resignFirstResponder()
             networkViewmodel.fetchRecipes(for: searchText, with: searchFilter, onSuccessBinding: {
                     [weak self] recipes in
                 self?.displayData(from: recipes)
-                self?.searchBar.resignFirstResponder()
+                self?.spinner.stopAnimating()
             }, onFailBinding: {})
         }
     }
@@ -57,12 +61,12 @@ class RecipesViewController: UIViewController{
         searchData = networkViewmodel.searchHistory
         
         searchDataFiltered = searchData
-        dropButton.anchorView = searchBar
-        dropButton.bottomOffset = CGPoint(x: 0, y:(searchBar.bounds.minY + 90))
-        dropButton.backgroundColor = .white
-        dropButton.direction = .bottom
+        dropDownMenu.anchorView = searchBar
+        dropDownMenu.bottomOffset = CGPoint(x: 0, y:(searchBar.bounds.minY + 90))
+        dropDownMenu.backgroundColor = .white
+        dropDownMenu.direction = .bottom
 
-        dropButton.selectionAction = { [weak self](index: Int, item: String) in
+        dropDownMenu.selectionAction = { [weak self](index: Int, item: String) in
             print("Selected item: \(item) at index: \(index)")
             self?.searchBar.text = item
             self?.filterCollectionView.isHidden = false
@@ -98,11 +102,14 @@ class RecipesViewController: UIViewController{
     }
     
     private func fetchSearchResults(for searchTxt : String){
+        spinner.isHidden = false
+        spinner.startAnimating()
         arrangeSearchHistory(for: searchTxt)
         searchText = searchTxt.lowercased()
         filterCollectionView.isHidden = false
         networkViewmodel.fetchRecipes(for: searchTxt.lowercased(), with: searchFilter,onSuccessBinding: {
             [weak self](recipes) in
+            self?.spinner.stopAnimating()
             self?.displayData(from: recipes)
         },onFailBinding: {})
     }
@@ -121,14 +128,14 @@ extension RecipesViewController: UISearchBarDelegate{
             searchDataFiltered = searchText.isEmpty ? searchData : searchData.filter({ (dat) -> Bool in
                 dat.range(of: searchText, options: .caseInsensitive) != nil
             })
-            dropButton.dataSource = searchDataFiltered
-            dropButton.show()
+            dropDownMenu.dataSource = searchDataFiltered
+            dropDownMenu.show()
         }
     }
     
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        dropButton.dataSource = searchDataFiltered
-        dropButton.show()
+        dropDownMenu.dataSource = searchDataFiltered
+        dropDownMenu.show()
         return true
     }
 
@@ -144,8 +151,10 @@ extension RecipesViewController: UISearchBarDelegate{
         searchBar.resignFirstResponder()
         searchBar.text = ""
         searchDataFiltered = searchData
-        dropButton.hide()
+        dropDownMenu.hide()
+        recipesTableView.isHidden = true
         filterCollectionView.isHidden = true
+        zeroResultsLbl.isHidden = true
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -184,6 +193,10 @@ extension RecipesViewController: UICollectionViewDelegate, UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        guard let searchTxt = searchBar.text,!searchTxt.isEmpty else{
+            return
+        }
+        searchText = searchTxt
         selectedCell = indexPath
         if(indexPath.item == 0){
             searchFilter = ""
@@ -223,11 +236,19 @@ extension RecipesViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if(indexPath.row == fetchedRecipes.count-1){
             networkViewmodel
-                .fetchRecipes(for: searchText, with: searchFilter, from: fetchedRecipes.count-1, to: fetchedRecipes.count+9)
+                .fetchRecipes(for: searchText, with: searchFilter, from: fetchedRecipes.count, to: fetchedRecipes.count+10)
                 { [weak self](recipes) in
                     self?.fetchedRecipes.append(contentsOf: recipes)
                     self?.recipesTableView.reloadData()
                 } onFailBinding: {}
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let detailsVC = storyboard?.instantiateViewController(identifier: "recipeDetailsVC") as? RecipeDetailsViewController{
+            detailsVC.recipe = fetchedRecipes[indexPath.row]
+            detailsVC.modalPresentationStyle = .fullScreen
+            present(detailsVC, animated: true)
         }
     }
 }

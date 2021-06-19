@@ -41,7 +41,7 @@ struct NetworkViewmodel {
                     return input["recipe"]!
                 })
                 DispatchQueue.main.async {
-                    onSuccessBinding(recipes!)
+                    onSuccessBinding(recipes ?? [])
                 }
             }
         }
