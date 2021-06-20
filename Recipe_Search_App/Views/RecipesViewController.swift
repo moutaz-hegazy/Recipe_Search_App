@@ -245,7 +245,7 @@ extension RecipesViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let detailsVC = storyboard?.instantiateViewController(identifier: "recipeDetailsVC") as? RecipeDetailsViewController{
+        if let detailsVC = storyboard?.instantiateViewController(withIdentifier: "recipeDetailsVC") as? RecipeDetailsViewController{
             detailsVC.recipe = fetchedRecipes[indexPath.row]
             detailsVC.modalPresentationStyle = .fullScreen
             present(detailsVC, animated: true)

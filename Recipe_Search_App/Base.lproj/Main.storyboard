@@ -95,8 +95,8 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="wUe-QU-8mx">
-                                <rect key="frame" x="188.5" y="429.5" width="37" height="37"/>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="wUe-QU-8mx">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
                                 <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </activityIndicatorView>
                             <collectionView hidden="YES" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="gEH-Mg-yMH">
@@ -209,12 +209,12 @@
                                 <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                                 <items>
                                     <navigationItem title="Recipe Details" id="gYe-2i-ayQ">
-                                        <barButtonItem key="leftBarButtonItem" title="Item" image="chevron.backward" catalog="system" id="Yd1-I1-jgN">
+                                        <barButtonItem key="leftBarButtonItem" title="Item" image="backImage" id="Yd1-I1-jgN">
                                             <connections>
                                                 <action selector="goBack:" destination="hd6-FJ-Dgg" id="aMq-SR-O9Y"/>
                                             </connections>
                                         </barButtonItem>
-                                        <barButtonItem key="rightBarButtonItem" title="Item" image="square.and.arrow.up" catalog="system" id="1cq-w8-cVn">
+                                        <barButtonItem key="rightBarButtonItem" title="Item" image="shareImage" id="1cq-w8-cVn">
                                             <connections>
                                                 <action selector="shareLink:" destination="hd6-FJ-Dgg" id="VDs-uU-Jpd"/>
                                             </connections>
@@ -288,8 +288,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="chevron.backward" catalog="system" width="96" height="128"/>
-        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <image name="backImage" width="40" height="40"/>
+        <image name="shareImage" width="48" height="48"/>
         <systemColor name="labelColor">
             <color white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
